@@ -1,0 +1,43 @@
+{
+    "description": "SDK PHP officiel des APIs partenaires NITA (v2) : authentification, signature HMAC et clients types pour P2CASH, P2W, P2P et Achat en ligne.",
+    "keywords": [
+        "openapitools",
+        "openapi-generator",
+        "openapi",
+        "php",
+        "sdk",
+        "rest",
+        "api"
+    ],
+    "homepage": "https://github.com/NITA-Transfert/nita-sdk-php",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "OpenAPI",
+            "homepage": "https://openapi-generator.tech"
+        }
+    ],
+    "require": {
+        "php": "^7.4 || ^8.0",
+        "ext-curl": "*",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "guzzlehttp/guzzle": "^7.3",
+        "guzzlehttp/psr7": "^1.7 || ^2.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0 || ^9.0",
+        "friendsofphp/php-cs-fixer": "^3.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Nita\\Sdk\\": "lib/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Nita\\Sdk\\Test\\": "test/"
+        }
+    },
+    "name": "nita-transfert/sdk"
+}
