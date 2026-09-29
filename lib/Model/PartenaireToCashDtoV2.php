@@ -663,12 +663,12 @@ class PartenaireToCashDtoV2 implements ModelInterface, ArrayAccess, \JsonSeriali
             $invalidProperties[] = "invalid value for 'requestId', the character length must be smaller than or equal to 100.";
         }
 
-        if ((mb_strlen($this->container['requestId']) < 4)) {
-            $invalidProperties[] = "invalid value for 'requestId', the character length must be bigger than or equal to 4.";
+        if ((mb_strlen($this->container['requestId']) < 1)) {
+            $invalidProperties[] = "invalid value for 'requestId', the character length must be bigger than or equal to 1.";
         }
 
-        if (!preg_match("/^[a-zA-Z0-9_\\-]{4,100}$/", $this->container['requestId'])) {
-            $invalidProperties[] = "invalid value for 'requestId', must be conform to the pattern /^[a-zA-Z0-9_\\-]{4,100}$/.";
+        if (!preg_match("/^[a-zA-Z0-9_\\-]{1,100}$/", $this->container['requestId'])) {
+            $invalidProperties[] = "invalid value for 'requestId', must be conform to the pattern /^[a-zA-Z0-9_\\-]{1,100}$/.";
         }
 
         if ($this->container['fraisInclus'] === null) {
@@ -1477,11 +1477,11 @@ class PartenaireToCashDtoV2 implements ModelInterface, ArrayAccess, \JsonSeriali
         if ((mb_strlen($requestId) > 100)) {
             throw new \InvalidArgumentException('invalid length for $requestId when calling PartenaireToCashDtoV2., must be smaller than or equal to 100.');
         }
-        if ((mb_strlen($requestId) < 4)) {
-            throw new \InvalidArgumentException('invalid length for $requestId when calling PartenaireToCashDtoV2., must be bigger than or equal to 4.');
+        if ((mb_strlen($requestId) < 1)) {
+            throw new \InvalidArgumentException('invalid length for $requestId when calling PartenaireToCashDtoV2., must be bigger than or equal to 1.');
         }
-        if ((!preg_match("/^[a-zA-Z0-9_\\-]{4,100}$/", ObjectSerializer::toString($requestId)))) {
-            throw new \InvalidArgumentException("invalid value for \$requestId when calling PartenaireToCashDtoV2., must conform to the pattern /^[a-zA-Z0-9_\\-]{4,100}$/.");
+        if ((!preg_match("/^[a-zA-Z0-9_\\-]{1,100}$/", ObjectSerializer::toString($requestId)))) {
+            throw new \InvalidArgumentException("invalid value for \$requestId when calling PartenaireToCashDtoV2., must conform to the pattern /^[a-zA-Z0-9_\\-]{1,100}$/.");
         }
 
         $this->container['requestId'] = $requestId;

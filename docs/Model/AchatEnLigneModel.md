@@ -8,8 +8,8 @@ Name | Type | Description | Notes
 **montantTransaction** | **float** |  |
 **phoneClient** | **string** |  |
 **motifTransaction** | **string** |  |
-**longTransaction** | **string** |  |
-**latTransaction** | **string** |  |
+**longTransaction** | **string** |  | [optional]
+**latTransaction** | **string** |  | [optional]
 **requestId** | **string** |  |
 **urlCallback** | **string** |  | [optional]
 **adresseIp** | **string** |  |

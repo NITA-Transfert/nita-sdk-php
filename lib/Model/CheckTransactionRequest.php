@@ -281,8 +281,8 @@ class CheckTransactionRequest implements ModelInterface, ArrayAccess, \JsonSeria
             $invalidProperties[] = "invalid value for 'requestId', the character length must be smaller than or equal to 100.";
         }
 
-        if ((mb_strlen($this->container['requestId']) < 4)) {
-            $invalidProperties[] = "invalid value for 'requestId', the character length must be bigger than or equal to 4.";
+        if ((mb_strlen($this->container['requestId']) < 1)) {
+            $invalidProperties[] = "invalid value for 'requestId', the character length must be bigger than or equal to 1.";
         }
 
         return $invalidProperties;
@@ -325,8 +325,8 @@ class CheckTransactionRequest implements ModelInterface, ArrayAccess, \JsonSeria
         if ((mb_strlen($requestId) > 100)) {
             throw new \InvalidArgumentException('invalid length for $requestId when calling CheckTransactionRequest., must be smaller than or equal to 100.');
         }
-        if ((mb_strlen($requestId) < 4)) {
-            throw new \InvalidArgumentException('invalid length for $requestId when calling CheckTransactionRequest., must be bigger than or equal to 4.');
+        if ((mb_strlen($requestId) < 1)) {
+            throw new \InvalidArgumentException('invalid length for $requestId when calling CheckTransactionRequest., must be bigger than or equal to 1.');
         }
 
         $this->container['requestId'] = $requestId;

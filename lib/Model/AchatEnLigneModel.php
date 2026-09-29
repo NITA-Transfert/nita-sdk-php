@@ -350,23 +350,13 @@ class AchatEnLigneModel implements ModelInterface, ArrayAccess, \JsonSerializabl
             $invalidProperties[] = "invalid value for 'motifTransaction', the character length must be bigger than or equal to 1.";
         }
 
-        if ($this->container['longTransaction'] === null) {
-            $invalidProperties[] = "'longTransaction' can't be null";
-        }
-        if ((mb_strlen($this->container['longTransaction']) < 1)) {
-            $invalidProperties[] = "invalid value for 'longTransaction', the character length must be bigger than or equal to 1.";
-        }
-
-        if ($this->container['latTransaction'] === null) {
-            $invalidProperties[] = "'latTransaction' can't be null";
-        }
-        if ((mb_strlen($this->container['latTransaction']) < 1)) {
-            $invalidProperties[] = "invalid value for 'latTransaction', the character length must be bigger than or equal to 1.";
-        }
-
         if ($this->container['requestId'] === null) {
             $invalidProperties[] = "'requestId' can't be null";
         }
+        if ((mb_strlen($this->container['requestId']) > 100)) {
+            $invalidProperties[] = "invalid value for 'requestId', the character length must be smaller than or equal to 100.";
+        }
+
         if ((mb_strlen($this->container['requestId']) < 1)) {
             $invalidProperties[] = "invalid value for 'requestId', the character length must be bigger than or equal to 1.";
         }
@@ -514,7 +504,7 @@ class AchatEnLigneModel implements ModelInterface, ArrayAccess, \JsonSerializabl
     /**
      * Gets longTransaction
      *
-     * @return string
+     * @return string|null
      */
     public function getLongTransaction()
     {
@@ -524,7 +514,7 @@ class AchatEnLigneModel implements ModelInterface, ArrayAccess, \JsonSerializabl
     /**
      * Sets longTransaction
      *
-     * @param string $longTransaction longTransaction
+     * @param string|null $longTransaction longTransaction
      *
      * @return self
      */
@@ -533,11 +523,6 @@ class AchatEnLigneModel implements ModelInterface, ArrayAccess, \JsonSerializabl
         if (is_null($longTransaction)) {
             throw new \InvalidArgumentException('non-nullable longTransaction cannot be null');
         }
-
-        if ((mb_strlen($longTransaction) < 1)) {
-            throw new \InvalidArgumentException('invalid length for $longTransaction when calling AchatEnLigneModel., must be bigger than or equal to 1.');
-        }
-
         $this->container['longTransaction'] = $longTransaction;
 
         return $this;
@@ -546,7 +531,7 @@ class AchatEnLigneModel implements ModelInterface, ArrayAccess, \JsonSerializabl
     /**
      * Gets latTransaction
      *
-     * @return string
+     * @return string|null
      */
     public function getLatTransaction()
     {
@@ -556,7 +541,7 @@ class AchatEnLigneModel implements ModelInterface, ArrayAccess, \JsonSerializabl
     /**
      * Sets latTransaction
      *
-     * @param string $latTransaction latTransaction
+     * @param string|null $latTransaction latTransaction
      *
      * @return self
      */
@@ -565,11 +550,6 @@ class AchatEnLigneModel implements ModelInterface, ArrayAccess, \JsonSerializabl
         if (is_null($latTransaction)) {
             throw new \InvalidArgumentException('non-nullable latTransaction cannot be null');
         }
-
-        if ((mb_strlen($latTransaction) < 1)) {
-            throw new \InvalidArgumentException('invalid length for $latTransaction when calling AchatEnLigneModel., must be bigger than or equal to 1.');
-        }
-
         $this->container['latTransaction'] = $latTransaction;
 
         return $this;
@@ -597,7 +577,9 @@ class AchatEnLigneModel implements ModelInterface, ArrayAccess, \JsonSerializabl
         if (is_null($requestId)) {
             throw new \InvalidArgumentException('non-nullable requestId cannot be null');
         }
-
+        if ((mb_strlen($requestId) > 100)) {
+            throw new \InvalidArgumentException('invalid length for $requestId when calling AchatEnLigneModel., must be smaller than or equal to 100.');
+        }
         if ((mb_strlen($requestId) < 1)) {
             throw new \InvalidArgumentException('invalid length for $requestId when calling AchatEnLigneModel., must be bigger than or equal to 1.');
         }
