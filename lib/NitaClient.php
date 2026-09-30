@@ -53,6 +53,12 @@ class NitaClient
         'production' => null, // TODO: URL de production
     ];
 
+    /** Délai d'expiration par défaut (secondes) d'un appel HTTP complet. */
+    public const DEFAULT_TIMEOUT_SECONDS = 30;
+
+    /** Délai d'expiration par défaut (secondes) de l'établissement de la connexion. */
+    public const DEFAULT_CONNECT_TIMEOUT_SECONDS = 10;
+
     /** Marge (secondes) avant expiration à partir de laquelle on rafraîchit proactivement le JWT. */
     private const REFRESH_SKEW_SECONDS = 30;
 
@@ -77,20 +83,25 @@ class NitaClient
     /** @var Configuration */
     private $config;
 
+    /** @var array{timeout: float, connect_timeout: float} Options Guzzle de délai d'expiration. */
+    private $timeouts;
+
     private function __construct(
         string $baseUrl,
         string $apiKey,
         ?string $hmacSecret,
         string $token,
-        ?string $refreshToken
+        ?string $refreshToken,
+        array $timeouts
     ) {
         $this->baseUrl = rtrim($baseUrl, '/');
         $this->apiKey = $apiKey;
         $this->hmacSecret = $hmacSecret;
         $this->token = $token;
         $this->refreshToken = $refreshToken;
+        $this->timeouts = $timeouts;
 
-        $this->guzzle = self::makeSigningClient($hmacSecret);
+        $this->guzzle = self::makeSigningClient($hmacSecret, $timeouts);
 
         $this->config = new Configuration();
         $this->config->setHost($this->baseUrl);
@@ -108,12 +119,17 @@ class NitaClient
      *     apiKey: string,
      *     login: string,
      *     password: string,
-     *     hmacSecret?: string
+     *     hmacSecret?: string,
+     *     timeoutSeconds?: int|float,
+     *     connectTimeoutSeconds?: int|float
      * } $opts Options : `baseUrl` (explicite, prioritaire) ou `environment`
      *          (preset `sandbox`/`production`, def. `sandbox`), `apiKey`
      *          (clé partenaire X-NT-API-KEY), `login`/`password`
      *          (identifiants `/api/authenticate`), `hmacSecret` (secret de
-     *          signature anti-rejeu, optionnel -- obligatoire en production).
+     *          signature anti-rejeu, optionnel -- obligatoire en production),
+     *          `timeoutSeconds` (délai max d'un appel, def. 30) et
+     *          `connectTimeoutSeconds` (délai max de connexion, def. 10),
+     *          appliqués à tous les appels HTTP du client.
      * @return self
      */
     public static function connect(array $opts): self
@@ -134,13 +150,14 @@ class NitaClient
             throw new \InvalidArgumentException("NitaClient::connect requiert 'apiKey', 'login' et 'password'.");
         }
         $hmacSecret = $opts['hmacSecret'] ?? null;
+        $timeouts = self::timeouts($opts);
 
         $session = self::postAuth($baseUrl, '/api/authenticate', $apiKey, $hmacSecret, [
             'username' => $login,
             'password' => $password,
-        ]);
+        ], $timeouts);
 
-        return new self($baseUrl, $apiKey, $hmacSecret, $session['token'], $session['refreshToken']);
+        return new self($baseUrl, $apiKey, $hmacSecret, $session['token'], $session['refreshToken'], $timeouts);
     }
 
     /** Force le rafraîchissement du token via `/api/refreshToken`. */
@@ -152,7 +169,7 @@ class NitaClient
 
         $session = self::postAuth($this->baseUrl, '/api/refreshToken', $this->apiKey, $this->hmacSecret, [
             'refreshToken' => $this->refreshToken,
-        ]);
+        ], $this->timeouts);
 
         $this->token = $session['token'];
         $this->refreshToken = $session['refreshToken'] ?? $this->refreshToken;
@@ -251,14 +268,32 @@ class NitaClient
      * fourni) -- voir {@see Hmac::attach()}. C'est ce client (pas un client
      * Guzzle nu) qui est passé aux Api du SDK généré.
      */
-    private static function makeSigningClient(?string $hmacSecret): Client
+    private static function makeSigningClient(?string $hmacSecret, array $timeouts): Client
     {
         $stack = HandlerStack::create();
         if ($hmacSecret) {
             Hmac::attach($stack, $hmacSecret);
         }
 
-        return new Client(['handler' => $stack]);
+        return new Client(['handler' => $stack] + $timeouts);
+    }
+
+    /**
+     * Options Guzzle de délai d'expiration tirées de `connect()` (Guzzle, par
+     * défaut, attend indéfiniment).
+     *
+     * @param array<string, mixed> $opts
+     * @return array{timeout: float, connect_timeout: float}
+     */
+    private static function timeouts(array $opts): array
+    {
+        $timeout = $opts['timeoutSeconds'] ?? self::DEFAULT_TIMEOUT_SECONDS;
+        $connectTimeout = $opts['connectTimeoutSeconds'] ?? self::DEFAULT_CONNECT_TIMEOUT_SECONDS;
+        if (!is_numeric($timeout) || $timeout <= 0 || !is_numeric($connectTimeout) || $connectTimeout <= 0) {
+            throw new \InvalidArgumentException("'timeoutSeconds' et 'connectTimeoutSeconds' doivent etre > 0.");
+        }
+
+        return ['timeout' => (float) $timeout, 'connect_timeout' => (float) $connectTimeout];
     }
 
     /**
@@ -268,6 +303,7 @@ class NitaClient
      * login initial, le client signé de l'instance n'existe pas encore.
      *
      * @param array<string, string> $payload
+     * @param array{timeout: float, connect_timeout: float} $timeouts
      * @return array{token: string, refreshToken: string|null}
      */
     private static function postAuth(
@@ -275,7 +311,8 @@ class NitaClient
         string $path,
         string $apiKey,
         ?string $hmacSecret,
-        array $payload
+        array $payload,
+        array $timeouts
     ): array {
         $body = json_encode($payload, JSON_UNESCAPED_SLASHES);
         $headers = [
@@ -286,7 +323,7 @@ class NitaClient
             $headers = array_merge($headers, Hmac::signatureHeaders($hmacSecret, $body));
         }
 
-        $client = new Client();
+        $client = new Client($timeouts);
         try {
             $response = $client->post(rtrim($baseUrl, '/') . $path, [
                 'headers' => $headers,

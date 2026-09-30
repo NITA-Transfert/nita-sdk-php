@@ -28,3 +28,10 @@ lib/NitaError.php
 lib/Hmac.php
 lib/Jwt.php
 lib/Photos.php
+lib/CallbackVerifier.php
+lib/NitaCallbackException.php
+
+# Tests ecrits a la main et config phpunit qui les inclut.
+test/Ergonomics/**
+phpunit.xml.dist
+README.md

@@ -85,6 +85,36 @@ try {
 
 ```
 
+## Vérifier un callback
+
+Usage serveur uniquement : le SDK exige tous les secrets du partenaire, ne jamais l'embarquer côté client.
+
+NITA signe ses callbacks v2 (POST JSON) avec votre secret HMAC. Vérifiez la signature sur le corps brut, avant tout traitement :
+
+```php
+<?php
+use Nita\Sdk\CallbackVerifier;
+use Nita\Sdk\NitaCallbackException;
+
+// Anti-rejeu : enregistre le nonce dans un stockage partagé (base, Redis...) ; vrai s'il est nouveau.
+$isNewNonce = function (string $nonce, int $ttlSeconds) use ($redis): bool {
+    return (bool) $redis->set('nita:nonce:' . $nonce, '1', ['nx', 'ex' => $ttlSeconds]);
+};
+$verifier = new CallbackVerifier(getenv('NITA_HMAC_SECRET'), $isNewNonce);
+
+try {
+    $payload = $verifier->verify(file_get_contents('php://input'), getallheaders());
+} catch (NitaCallbackException $e) {
+    http_response_code(401);
+    exit;
+}
+// $payload['status'], $payload['transaction_id']
+```
+
+Sans `$isNewNonce`, un callback valide peut être rejoué pendant la tolérance d'horodatage (300 s par défaut).
+
+Les appels HTTP de `NitaClient` expirent après 30 s (connexion : 10 s) : options `timeoutSeconds` et `connectTimeoutSeconds` de `NitaClient::connect`.
+
 ## API Endpoints
 
 All URIs are relative to *http://localhost:8584*
