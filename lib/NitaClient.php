@@ -33,8 +33,8 @@ use Nita\Sdk\Model\ModelInterface;
  * $nita = NitaClient::connect([
  *     'environment' => 'sandbox',
  *     'apiKey' => $apiKey,
- *     'login' => 'demo',
- *     'password' => 'demo123',
+ *     'login' => $login,
+ *     'password' => $password,
  *     'hmacSecret' => $secret,
  * ]);
  * $solde = NitaClient::unwrap($nita->compte()->consulterSoldeCompte());
