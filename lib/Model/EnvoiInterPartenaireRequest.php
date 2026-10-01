@@ -316,6 +316,15 @@ class EnvoiInterPartenaireRequest implements ModelInterface, ArrayAccess, \JsonS
     {
         $invalidProperties = [];
 
+        if ($this->container['requestId'] === null) {
+            $invalidProperties[] = "'requestId' can't be null";
+        }
+        if ($this->container['partenaireDestinataireAlias'] === null) {
+            $invalidProperties[] = "'partenaireDestinataireAlias' can't be null";
+        }
+        if ($this->container['montantTransaction'] === null) {
+            $invalidProperties[] = "'montantTransaction' can't be null";
+        }
         return $invalidProperties;
     }
 
@@ -334,7 +343,7 @@ class EnvoiInterPartenaireRequest implements ModelInterface, ArrayAccess, \JsonS
     /**
      * Gets requestId
      *
-     * @return string|null
+     * @return string
      */
     public function getRequestId()
     {
@@ -344,7 +353,7 @@ class EnvoiInterPartenaireRequest implements ModelInterface, ArrayAccess, \JsonS
     /**
      * Sets requestId
      *
-     * @param string|null $requestId Votre référence d'opération (idempotence).
+     * @param string $requestId Votre référence d'opération (idempotence).
      *
      * @return self
      */
@@ -361,7 +370,7 @@ class EnvoiInterPartenaireRequest implements ModelInterface, ArrayAccess, \JsonS
     /**
      * Gets partenaireDestinataireAlias
      *
-     * @return string|null
+     * @return string
      */
     public function getPartenaireDestinataireAlias()
     {
@@ -371,7 +380,7 @@ class EnvoiInterPartenaireRequest implements ModelInterface, ArrayAccess, \JsonS
     /**
      * Sets partenaireDestinataireAlias
      *
-     * @param string|null $partenaireDestinataireAlias Alias du partenaire destinataire (même organisation).
+     * @param string $partenaireDestinataireAlias Alias du partenaire destinataire (même organisation).
      *
      * @return self
      */
@@ -415,7 +424,7 @@ class EnvoiInterPartenaireRequest implements ModelInterface, ArrayAccess, \JsonS
     /**
      * Gets montantTransaction
      *
-     * @return float|null
+     * @return float
      */
     public function getMontantTransaction()
     {
@@ -425,7 +434,7 @@ class EnvoiInterPartenaireRequest implements ModelInterface, ArrayAccess, \JsonS
     /**
      * Sets montantTransaction
      *
-     * @param float|null $montantTransaction montantTransaction
+     * @param float $montantTransaction montantTransaction
      *
      * @return self
      */

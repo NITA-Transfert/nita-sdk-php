@@ -4,10 +4,10 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**requestId** | **string** | Votre référence d&#39;opération (idempotence). | [optional]
-**partenaireDestinataireAlias** | **string** | Alias du partenaire destinataire (même organisation). | [optional]
+**requestId** | **string** | Votre référence d&#39;opération (idempotence). |
+**partenaireDestinataireAlias** | **string** | Alias du partenaire destinataire (même organisation). |
 **compteDestinataire** | **string** | Libellé du compte destinataire (optionnel si unique). | [optional]
-**montantTransaction** | **float** |  | [optional]
+**montantTransaction** | **float** |  |
 **typeFraisEnvoi** | **string** | fraisApars (défaut) ou fraisInclus. | [optional]
 **motifTransaction** | **string** |  | [optional]
 **compteExpediteur** | **string** | Libellé du compte expéditeur (optionnel si unique). | [optional]
