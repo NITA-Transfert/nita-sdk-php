@@ -292,14 +292,11 @@ class GetPartenaireToWalletModel implements ModelInterface, ArrayAccess, \JsonSe
             $invalidProperties[] = "invalid value for 'requestId', the character length must be bigger than or equal to 0.";
         }
 
-        if ($this->container['codeRecharge'] === null) {
-            $invalidProperties[] = "'codeRecharge' can't be null";
-        }
-        if ((mb_strlen($this->container['codeRecharge']) > 50)) {
+        if (!is_null($this->container['codeRecharge']) && (mb_strlen($this->container['codeRecharge']) > 50)) {
             $invalidProperties[] = "invalid value for 'codeRecharge', the character length must be smaller than or equal to 50.";
         }
 
-        if ((mb_strlen($this->container['codeRecharge']) < 0)) {
+        if (!is_null($this->container['codeRecharge']) && (mb_strlen($this->container['codeRecharge']) < 0)) {
             $invalidProperties[] = "invalid value for 'codeRecharge', the character length must be bigger than or equal to 0.";
         }
 
@@ -355,7 +352,7 @@ class GetPartenaireToWalletModel implements ModelInterface, ArrayAccess, \JsonSe
     /**
      * Gets codeRecharge
      *
-     * @return string
+     * @return string|null
      */
     public function getCodeRecharge()
     {
@@ -365,7 +362,7 @@ class GetPartenaireToWalletModel implements ModelInterface, ArrayAccess, \JsonSe
     /**
      * Sets codeRecharge
      *
-     * @param string $codeRecharge codeRecharge
+     * @param string|null $codeRecharge Facultatif : absent, la recharge est retrouvée par le seul requestId (reprise après un timeout à la création).
      *
      * @return self
      */
