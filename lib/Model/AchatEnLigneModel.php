@@ -65,6 +65,7 @@ class AchatEnLigneModel implements ModelInterface, ArrayAccess, \JsonSerializabl
         'latTransaction' => 'string',
         'requestId' => 'string',
         'urlCallback' => 'string',
+        'urlRetour' => 'string',
         'adresseIp' => 'string'
     ];
 
@@ -84,6 +85,7 @@ class AchatEnLigneModel implements ModelInterface, ArrayAccess, \JsonSerializabl
         'latTransaction' => null,
         'requestId' => null,
         'urlCallback' => null,
+        'urlRetour' => null,
         'adresseIp' => null
     ];
 
@@ -101,6 +103,7 @@ class AchatEnLigneModel implements ModelInterface, ArrayAccess, \JsonSerializabl
         'latTransaction' => false,
         'requestId' => false,
         'urlCallback' => false,
+        'urlRetour' => false,
         'adresseIp' => false
     ];
 
@@ -198,6 +201,7 @@ class AchatEnLigneModel implements ModelInterface, ArrayAccess, \JsonSerializabl
         'latTransaction' => 'latTransaction',
         'requestId' => 'requestId',
         'urlCallback' => 'urlCallback',
+        'urlRetour' => 'urlRetour',
         'adresseIp' => 'adresseIp'
     ];
 
@@ -215,6 +219,7 @@ class AchatEnLigneModel implements ModelInterface, ArrayAccess, \JsonSerializabl
         'latTransaction' => 'setLatTransaction',
         'requestId' => 'setRequestId',
         'urlCallback' => 'setUrlCallback',
+        'urlRetour' => 'setUrlRetour',
         'adresseIp' => 'setAdresseIp'
     ];
 
@@ -232,6 +237,7 @@ class AchatEnLigneModel implements ModelInterface, ArrayAccess, \JsonSerializabl
         'latTransaction' => 'getLatTransaction',
         'requestId' => 'getRequestId',
         'urlCallback' => 'getUrlCallback',
+        'urlRetour' => 'getUrlRetour',
         'adresseIp' => 'getAdresseIp'
     ];
 
@@ -300,6 +306,7 @@ class AchatEnLigneModel implements ModelInterface, ArrayAccess, \JsonSerializabl
         $this->setIfExists('latTransaction', $data ?? [], null);
         $this->setIfExists('requestId', $data ?? [], null);
         $this->setIfExists('urlCallback', $data ?? [], null);
+        $this->setIfExists('urlRetour', $data ?? [], null);
         $this->setIfExists('adresseIp', $data ?? [], null);
     }
 
@@ -612,6 +619,33 @@ class AchatEnLigneModel implements ModelInterface, ArrayAccess, \JsonSerializabl
             throw new \InvalidArgumentException('non-nullable urlCallback cannot be null');
         }
         $this->container['urlCallback'] = $urlCallback;
+
+        return $this;
+    }
+
+    /**
+     * Gets urlRetour
+     *
+     * @return string|null
+     */
+    public function getUrlRetour()
+    {
+        return $this->container['urlRetour'];
+    }
+
+    /**
+     * Sets urlRetour
+     *
+     * @param string|null $urlRetour urlRetour
+     *
+     * @return self
+     */
+    public function setUrlRetour($urlRetour)
+    {
+        if (is_null($urlRetour)) {
+            throw new \InvalidArgumentException('non-nullable urlRetour cannot be null');
+        }
+        $this->container['urlRetour'] = $urlRetour;
 
         return $this;
     }

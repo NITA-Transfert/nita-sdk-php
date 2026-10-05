@@ -12,6 +12,7 @@ Name | Type | Description | Notes
 **latTransaction** | **string** |  | [optional]
 **requestId** | **string** |  |
 **urlCallback** | **string** |  | [optional]
+**urlRetour** | **string** |  | [optional]
 **adresseIp** | **string** |  |
 
 [[Back to Model list]](../../README.md#models) [[Back to API list]](../../README.md#endpoints) [[Back to README]](../../README.md)
