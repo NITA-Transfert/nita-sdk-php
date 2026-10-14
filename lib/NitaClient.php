@@ -318,6 +318,8 @@ class NitaClient
         $headers = [
             'X-NT-API-KEY' => $apiKey,
             'Content-Type' => 'application/json',
+            // Meme User-Agent que les appels metier (client genere).
+            'User-Agent' => Configuration::getDefaultConfiguration()->getUserAgent(),
         ];
         if ($hmacSecret) {
             $headers = array_merge($headers, Hmac::signatureHeaders($hmacSecret, $body));
