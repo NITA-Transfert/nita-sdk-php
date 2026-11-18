@@ -142,6 +142,7 @@ class NitaClient
                 "Passe 'baseUrl' explicitement (l'URL est indiquée dans ton espace partenaire)."
             );
         }
+        self::requireSecureBaseUrl($baseUrl);
 
         $apiKey = $opts['apiKey'] ?? null;
         $login = $opts['login'] ?? null;
@@ -294,6 +295,28 @@ class NitaClient
         }
 
         return ['timeout' => (float) $timeout, 'connect_timeout' => (float) $connectTimeout];
+    }
+
+    /**
+     * Refuse une URL de base qui n'est pas en https:// : la clé API, le mot de passe
+     * et le jeton y circuleraient en clair. Seule exception : http:// vers la machine
+     * locale (localhost, 127.0.0.1, ::1).
+     */
+    public static function requireSecureBaseUrl(string $baseUrl): void
+    {
+        $parts = parse_url($baseUrl);
+        $scheme = strtolower((string) ($parts['scheme'] ?? ''));
+        $host = strtolower(trim((string) ($parts['host'] ?? ''), '[]'));
+        if ($host !== '' && $scheme === 'https') {
+            return;
+        }
+        if ($scheme === 'http' && in_array($host, ['localhost', '127.0.0.1', '::1'], true)) {
+            return;
+        }
+        throw new \InvalidArgumentException(
+            "URL de base refusée : '{$baseUrl}'. Utilise une adresse en https:// "
+            . "(http:// n'est accepté que vers localhost)."
+        );
     }
 
     /**
